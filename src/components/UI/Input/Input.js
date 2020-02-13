@@ -4,18 +4,28 @@ import classes from './Input.module.css';
 
 const input = (props) => {
   let inputElement = null;
+  const inputClasses = [classes.InputElement];
+
+  if (props.invalid && props.shouldValidate && props.touched) {
+    inputClasses.push(classes.Invalid);
+  }
+
+  let validationError = null;
+  if (props.invalid && props.touched) {
+    validationError = <p className={classes.ValidationError}> {props.valueType.charAt(0).toUpperCase() + props.valueType.slice(1)} is required.</p>;
+  }
 
   switch (props.elementType) {
     case ('input'):
       inputElement = <input
-        className={classes.InputElement}
+        className={inputClasses.join(' ')}
         {...props.elementConfig}
         onChange={props.changed}
         value={props.value}/>;
       break;
     case ('textarea'):
       inputElement = <textarea
-        className={classes.InputElement}
+        className={inputClasses.join(' ')}
         {...props.elementConfig}
         onChange={props.changed}
         value={props.value}/>;
@@ -23,7 +33,7 @@ const input = (props) => {
       case ('select'):
         inputElement = (
             <select
-            className={classes.InputElement}
+            className={inputClasses.join(' ')}
             onChange={props.changed}
             value={props.value}>
             {props.elementConfig.options.map(option => (
@@ -36,7 +46,7 @@ const input = (props) => {
         break;
     default:
         inputElement = <input
-        className={classes.InputElement}
+        className={inputClasses.join(' ')}
         {...props.elementConfig}
         onChange={props.changed}
         value={props.value}/>
@@ -46,6 +56,7 @@ const input = (props) => {
     <div className={classes.Input}>
       <label className={classes.Label}>{props.label}</label>
       {inputElement}
+      {validationError}
     </div>
   );
 };
